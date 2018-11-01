@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-"""Tests for `mpc_boilerplate` package."""
+"""Tests for `mpchecker2` package."""
 
 import pytest
 
 
-from mpc_boilerplate import mpc_boilerplate
+from mpchecker2 import mpchecker2
 
 
 @pytest.fixture

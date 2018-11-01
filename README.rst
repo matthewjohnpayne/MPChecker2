@@ -1,26 +1,26 @@
 ===============
-MPC Boilerplate
+MPChecker2
 ===============
 
 
-.. image:: https://img.shields.io/pypi/v/mpc_boilerplate.svg
-        :target: https://pypi.python.org/pypi/mpc_boilerplate
+.. image:: https://img.shields.io/pypi/v/mpchecker2.svg
+        :target: https://pypi.python.org/pypi/mpchecker2
 
-.. image:: https://img.shields.io/travis/matthewjohnpayne/mpc_boilerplate.svg
-        :target: https://travis-ci.org/matthewjohnpayne/mpc_boilerplate
+.. image:: https://img.shields.io/travis/matthewjohnpayne/mpchecker2.svg
+        :target: https://travis-ci.org/matthewjohnpayne/mpchecker2
 
-.. image:: https://readthedocs.org/projects/mpc-boilerplate/badge/?version=latest
-        :target: https://mpc-boilerplate.readthedocs.io/en/latest/?badge=latest
+.. image:: https://readthedocs.org/projects/mpchecker2/badge/?version=latest
+        :target: https://mpchecker2.readthedocs.io/en/latest/?badge=latest
         :alt: Documentation Status
 
 
 
 
-MPC Boilerplate contains all the boilerplate you need to create a Python package for the MPC
+MPChecker2 tells you the objects in your field of view
 
 
 * Free software: MIT license
-* Documentation: https://mpc-boilerplate.readthedocs.io.
+* Documentation: https://mpchecker2.readthedocs.io.
 
 
 Features
