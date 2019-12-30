@@ -38,10 +38,14 @@ import mpchecker2.precalc
 
 class POINTING:
     '''
-    To contain the pointing (exposure) which is the input to MPChecker
+        To contain the pointing (exposure) which is the input to MPChecker
 
-    Will have to contain information like ...
-    ... date, obscode, (RA,Dec)/Unit-Vector, radius, ...
+        Will have to contain information like ...
+        date, 
+        obscode, 
+        (RA,Dec)/Unit-Vector, 
+        radius, 
+        ...
 
     '''
 
@@ -58,12 +62,12 @@ class POINTING:
 
 class SUSPECTS:
     '''
-    To contain the MPCHECKER results regarding the minor planets which are
-    potentially in the field of view of a POINTING.
-    
-    For each name/desig, will need to hold some specification of the orbit
-    and its associated uncertainty 
-     - *** SHOULD DEFINE SOME SIMPLE CLASS TO REFER TO HERE ***
+        To contain the MPCHECKER results regarding the minor planets which are
+        potentially in the field of view of a POINTING.
+        
+        For each name/desig, will need to hold some specification of the orbit
+        and its associated uncertainty 
+         - *** SHOULD DEFINE SOME SIMPLE CLASS TO REFER TO HERE ***
     
     '''
 
@@ -105,63 +109,51 @@ class IDENTIFICATIONS:
 
 class MPCHECKER:
     '''
-    Provide all methods associated with MPChecker
-     - Get "shortlists" for night
-     - Do detailed orbital advance
-     - Get "refined" list of actual overlap with FoV
-     - Associated refined list with detections/tracklets
+        Provide all methods associated with MPChecker
+         - Get "shortlists" for night
+         - Do detailed orbital advance
+         - Get "refined" list of actual overlap with FoV
+         - Associated refined list with detections/tracklets
         
     '''
     
     
-    def __init__(self, pointing ):
+    def __init__(self, ):
         '''
-        Must initialize with a valid POINTING object
-
-        Parameters
-        ----------
-        pointing    :   POINTING-object or iterable of POINTING-objects
-        
-        Examples
-        --------
-        >>> import mpchecker2
-        >>> p = POINTING(something)
-        >>> m = MPCHECKER(p)
-        >>> s = m.suspects
-
+            ...
         '''
+        self.suspects = None
+    
+
+    def get_objects_which_overlap_FoV( pointing_variable ):
+        '''
+            We want to calculate which objects are in the FoV 
+            (or have some chance of being in the FoV) of a single pointing. 
+            
+            We load precalculated quantities to help us understand which objects have 
+            any chance at all of being close to the FoV
+            We
+            
+            Parameters
+            ----------
+            
+            Returns
+            -------
+            suspects    :   SUSPECTS-object
+            
+            Examples
+            --------
+            >>> ...
         
-        # My working assumpting is that by default we want to
-        # calculate the objects in the FoV of the pointing(s)
-        if isinstance(pointing, POINTING):
-            self.suspects = get_objects_which_overlap_FoV(pointing)
-        elif isinstance(pointing, list) and isinstance(pointing[0], POINTING):
-            self.suspects = [ get_objects_which_overlap_FoV(pointing) for pointing in pointings ]
+        '''
+
+        # Check whether we are working with a POINTING or a list-of-POINTINGS
+        if isinstance(pointing_variable, POINTING):
+            pointing_variable = [pointing_variable]
+        elif isinstance(pointing_variable, list) and np.all( [ isinstance(_, POINTING) for _ in pointing_variable] ) :
+            pass
         else:
             sys.exit("Incompatible data types input to MPCHECKER class")
-
-
-    def get_objects_which_overlap_FoV(pointing):
-        '''
-        We want to calculate which objects are in (or have some chance of being in) 
-        the Fov of a single pointing
-        We load precalculated quantities to help us understand which objects have 
-        any chance at all of being close to the FoV
-        We
-        
-        Parameters
-        ----------
-        
-        Returns
-        -------
-        suspects    :   SUSPECTS-object
-        
-        Examples
-        --------
-        >>> ...
-        
-        '''
-
 
         # Get precalculated nightly datasets
         # - hp2object contains GEOCENTRIC healpix (i.e., only an approximation to what we need)

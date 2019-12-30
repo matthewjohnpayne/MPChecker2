@@ -48,7 +48,7 @@ class PRECALC:
     (a) poly-func (cheby?) for calculating heliocentric positions
     (b) lists of objects-per-HP (geocentric?)
     
-    Once I have decide where funcstions wil live ...
+    Once I have decide where functions wil live ...
     ... *** "self" needs to be added in a lot of places below ***
     
     
@@ -75,8 +75,9 @@ class PRECALC:
         Returns
         -------
         hp2object       : dictionary (or perhaps list) of lists
-        For an input healpix-integer, it contains a list of the objects
-        which touched / may-have-touched the healpix in the stated night
+         - For an input healpix-integer, it contains a list of the objects
+           which touched / may-have-touched the healpix in the stated night
+        
         objects2func    : dictionary (or perhaps list) of functions
         For an input object, a function is returned to provide
         rapid evaluation of heliocentric position for this night.
