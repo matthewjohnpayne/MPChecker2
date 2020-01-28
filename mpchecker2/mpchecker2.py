@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+py# -*- coding: utf-8 -*-
 # mpchecker2/mpchecker2/mpchecker2.py
 
 '''
@@ -30,7 +30,7 @@ import numpy as np
 
 # Import neighboring packages
 # --------------------------------------------------------------
-import mpchecker2.precalc
+import precalc
 
 
 # Data classes for MPChecker2
@@ -147,37 +147,58 @@ class MPCHECKER:
         
         '''
 
-        # Check whether we are working with a POINTING or a list-of-POINTINGS
-        if isinstance(pointing_variable, POINTING):
-            pointing_variable = [pointing_variable]
-        elif isinstance(pointing_variable, list) and np.all( [ isinstance(_, POINTING) for _ in pointing_variable] ) :
-            pass
-        else:
-            sys.exit("Incompatible data types input to MPCHECKER class")
+        # Make sure pointing_variable is a list-of-pointings
+        list_of_pointings = self._rectify_pointings(pointing_variable)
 
         # Get precalculated nightly datasets
-        # - hp2object contains GEOCENTRIC healpix (i.e., only an approximation to what we need)
-        hp2object , objects2func = PRECALC().get_nightly_precalcs( pointing.JDutc )
+        # - result_dict: key=HP ;  value=list-of-coeff-dictionaries
+        for p in list_of_pointings:
+            result_dict = precalc.PreCalc().get_nightly_precalcs( p.JDutc , p.HPlist )
         
-        # Advance all objects of interest to specific time of pointing
-        for HP in pointing.HParray :
-            for objectName in hp2object[HP]:
-                helioPosns = objects2func[objectName][pointing.JDutc]
+            # Advance all objects of interest to specific time of pointing
+            for HP in result_dict :
+                for coeff_dict in result_dict[HP]:
+                    
+                    # Calculate topocentric sky coords using coefficient-dict
+                    p.get_sky_coords(p.JDutc , p.obscode, coeff_dict)
 
-                # Calculate TOPOCENTRIC sky-plane coordinates of objects at time of pointing
-                pass # skyUnitVecs     = ...  # <<-- Something to do with MPCSky
-    
-                # Calculate whether objects are in the FoV
-                # (more specifically, have some part of the their sky-plane-uncert in the FoV)
-                # ****** CAREFUL ABOUT *MULTIPLE* skyUnitVecs & SINGLE pointing.UnitVec *******
-                angleRad = np.arccos(np.clip( np.dot(skyUnitVecs,pointing.UnitVec) , -1, 1))
+                    # Calculate whether objects are in the FoV
+                    # (more specifically, have some part of the their sky-plane-uncert in the FoV)
+                    # ****** CAREFUL ABOUT *MULTIPLE* skyUnitVecs & SINGLE pointing.UnitVec *******
+                    angleRad = np.arccos(np.clip( np.dot(skyUnitVecs,pointing.UnitVec) , -1, 1))
 
         return SUSPECTS(something)
 
 
 
-
-
+    def _rectify_pointings(self,  pointing_variable ):
+        '''
+            Private method called to rectify the input to "get_objects_which_overlap_FoV()"
+            
+            inputs:
+            -------
+            pointing_variable: pointing or list-of-pointings
+            
+            returns:
+            --------
+            list_of_pointings : list-of-pointings
+            -
+        
+        '''
+        # If singular quantity, make into lists
+        if isinstance(pointing_variable, POINTING):
+            list_of_pointings = [POINTING]
+            
+        # If non-singular, check plausibly formatted
+        # (N.B. Not doing detailed content checks at this point)
+        elif    isinstance(pointing_variable, (list, np.ndarray)) and \
+            np.all([ isinstance(_, POINTING) for _ in pointing_variable]):
+            list_of_pointings = pointing_variable
+        else:
+            sys.exit('Cannot process input of type %r in MPCHECKER ' % ( type(pointing_variable)) )
+                        
+        # return everything in list form
+        return list_of_pointings
 
 
 
